@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class UserController {
     @Autowired
@@ -21,5 +23,10 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<UserModel> saveUser(@RequestBody @Valid UserDTO userDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userDTO));
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UserModel>> listAllUsers(){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.listAllUsers());
     }
 }

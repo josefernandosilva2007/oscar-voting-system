@@ -11,17 +11,25 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
 
-    @PostMapping("/category")
-    public ResponseEntity<CategoryModel> saveUser(@RequestBody @Valid CategoryDTO categoryDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.saveUser(categoryDTO));
+    @PostMapping("/categories")
+    public ResponseEntity<CategoryModel> saveCategory(@RequestBody @Valid CategoryDTO categoryDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.saveCategory(categoryDTO));
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<CategoryModel>> listAllCategories(){
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.listAllCategories());
     }
 }

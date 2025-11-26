@@ -13,6 +13,7 @@ public class CategoryModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Column(unique = true)
     private String name;
     private String description;
 }

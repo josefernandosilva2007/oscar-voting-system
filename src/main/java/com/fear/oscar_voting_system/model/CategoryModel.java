@@ -16,4 +16,8 @@ public class CategoryModel implements Serializable {
     @Column(unique = true)
     private String name;
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "winning_movie_id")
+    private MovieModel movieWinning;
 }

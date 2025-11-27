@@ -11,12 +11,11 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 public class CategoryController {
@@ -31,5 +30,12 @@ public class CategoryController {
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryModel>> listAllCategories(){
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.listAllCategories());
+    }
+
+    @PatchMapping("/{id}/winner")
+    public ResponseEntity<Void> setWinner(@PathVariable UUID id, @RequestBody Map<String, UUID> body) {
+        UUID movieId = body.get("movieId");
+        categoryService.defineWinningMovie(id, movieId);
+        return ResponseEntity.noContent().build();
     }
 }

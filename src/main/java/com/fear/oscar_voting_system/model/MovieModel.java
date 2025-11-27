@@ -1,5 +1,6 @@
 package com.fear.oscar_voting_system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,5 +20,6 @@ public class MovieModel implements Serializable {
     private String director;
 
     @ManyToMany
+    @JsonIgnore
     private List<CategoryModel> categories;
 }

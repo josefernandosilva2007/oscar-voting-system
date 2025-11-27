@@ -14,17 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/votes")
 public class VoteController {
     @Autowired
     VoteService voteService;
 
-    @PostMapping()
+    @PostMapping("/votes")
     public ResponseEntity<VoteModel> saveVote(@RequestBody @Valid VoteDTO data){
         VoteModel vote = voteService.saveVote(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(vote);
     }
-    @GetMapping
+    @GetMapping("/votes")
     public ResponseEntity<List<VoteModel>> listAllVotes(){
         return ResponseEntity.status(HttpStatus.OK).body(voteService.showAllVotes());
     }

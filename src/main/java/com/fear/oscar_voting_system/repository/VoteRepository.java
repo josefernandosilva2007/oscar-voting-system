@@ -1,9 +1,11 @@
 package com.fear.oscar_voting_system.repository;
 
+import com.fear.oscar_voting_system.model.UserModel;
 import com.fear.oscar_voting_system.model.VoteModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository

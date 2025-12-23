@@ -15,9 +15,10 @@ public class MovieModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     private String name;
     private String director;
+    private String imageUrl;
+
 
     @ManyToMany
     @JsonIgnore

@@ -26,15 +26,19 @@ public class VoteService {
     CategoryRepository categoryRepository;
 
     public VoteModel saveVote(VoteDTO voteDTO) {
-        UserModel user = userRepository.findById(voteDTO.userId())
+        UserModel user =
+                userRepository.findById(voteDTO.userId())
                 .orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
-        MovieModel movie = movieRepository.findById(voteDTO.movieId())
+        MovieModel movie =
+                movieRepository.findById(voteDTO.movieId())
                 .orElseThrow(() -> new RuntimeException("Filme nao Encontrado"));
-        CategoryModel category = categoryRepository.findById(voteDTO.categoryId())
+        CategoryModel category =
+                categoryRepository.findById(voteDTO.categoryId())
                 .orElseThrow(() -> new RuntimeException("Categoria nao Encontrado"));
 
 
-        boolean categoryFound = movie.getCategories()
+        boolean categoryFound =
+                movie.getCategories()
                 .stream()
                 .anyMatch(c -> c.getId().equals(category.getId()));
         if (!categoryFound)

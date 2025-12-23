@@ -29,12 +29,14 @@ public class CategoryService {
     }
 
     public void defineWinningMovie(UUID categoryId, UUID movieId){
-        MovieModel movie = movieRepository.findById(movieId).orElseThrow(() -> new RuntimeException("Esse Filme nao existe"));
-        CategoryModel category = categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException("Essa Categoria nao Existe"));
+        MovieModel movie =
+                movieRepository.findById(movieId).orElseThrow(() -> new RuntimeException("Esse Filme nao existe"));
+        CategoryModel category =
+                categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException("Essa Categoria nao Existe"));
 
-        if (!movie.getCategories().contains(category)){
+        if (!movie.getCategories().contains(category))
             throw new RuntimeException("O filme " + movie.getName() + " nao concorre a categoria " + category.getName());
-        }
+
         category.setMovieWinning(movie);
         categoryRepository.save(category);
     }

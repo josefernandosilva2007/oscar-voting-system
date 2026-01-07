@@ -1,4 +1,6 @@
 package com.fear.oscar_voting_system.dto;
 
-public record ResponseUserScoreDTO(String username, int score) {
+import java.util.UUID;
+
+public record ResponseUserScoreDTO(UUID id, String username, int score) {
 }

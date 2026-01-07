@@ -10,9 +10,12 @@ import com.fear.oscar_voting_system.repository.MovieRepository;
 import com.fear.oscar_voting_system.repository.UserRepository;
 import com.fear.oscar_voting_system.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class VoteService {
@@ -44,7 +47,7 @@ public class VoteService {
         if (!categoryFound)
             throw new RuntimeException("Este filme nao concorre na categoria");
         if (voteRepository.existsByUser_IdAndCategory_Id(user.getId(),category.getId()))
-            throw new RuntimeException("Voce ja votou nesta categoria!");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Você já votou nesta categoria!");
 
         VoteModel vote = VoteModel
                 .builder()
@@ -54,6 +57,10 @@ public class VoteService {
                 .build();
 
         return voteRepository.save(vote);
+    }
+    public List<VoteModel> listVotesByUser(UUID userId) {
+
+        return voteRepository.findByUser_Id(userId);
     }
 
     public List<VoteModel> showAllVotes(){

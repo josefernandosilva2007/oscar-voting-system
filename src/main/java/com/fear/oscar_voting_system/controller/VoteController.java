@@ -12,19 +12,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
+@RequestMapping("/votes")
+@CrossOrigin(origins = "*")
 public class VoteController {
     @Autowired
     VoteService voteService;
 
-    @PostMapping("/votes")
+    @PostMapping
     public ResponseEntity<VoteModel> saveVote(@RequestBody @Valid VoteDTO data){
         VoteModel vote = voteService.saveVote(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(vote);
     }
-    @GetMapping("/votes")
+    @GetMapping
     public ResponseEntity<List<VoteModel>> listAllVotes(){
         return ResponseEntity.status(HttpStatus.OK).body(voteService.showAllVotes());
+    }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<VoteModel>> listVotesByUser(@PathVariable UUID userId) {
+        List<VoteModel> votes = voteService.listVotesByUser(userId);
+        return ResponseEntity.ok(votes);
     }
 }

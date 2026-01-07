@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,6 +17,9 @@ public class CategoryModel implements Serializable {
     @Column(unique = true)
     private String name;
     private String description;
+
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
+    private List<MovieModel> movies;
 
     @ManyToOne
     @JoinColumn(name = "winning_movie_id")

@@ -21,7 +21,10 @@ public class UserService {
         BeanUtils.copyProperties(userDTO, userModel);
         return userRepository.save(userModel);
     }
-
+    public UserModel executeLogin(String username, String password) {
+        return userRepository.findByUsernameAndPassword(username, password)
+                .orElseThrow(() -> new RuntimeException("Login ou senha inválidos"));
+    }
 
     public List<UserModel> listAllUsers(){
         return userRepository.findAll();

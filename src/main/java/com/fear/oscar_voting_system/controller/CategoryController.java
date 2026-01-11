@@ -18,17 +18,18 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/categories")
 @CrossOrigin(origins = "*")
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
 
-    @PostMapping("/categories")
+    @PostMapping
     public ResponseEntity<CategoryModel> saveCategory(@RequestBody @Valid CategoryDTO categoryDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.saveCategory(categoryDTO));
     }
 
-    @GetMapping("/categories")
+    @GetMapping
     public ResponseEntity<List<CategoryModel>> listAllCategories(){
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.listAllCategories());
     }

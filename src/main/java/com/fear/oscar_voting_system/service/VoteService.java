@@ -1,5 +1,7 @@
 package com.fear.oscar_voting_system.service;
 
+import com.fear.oscar_voting_system.dto.ResponseUserScoreDTO;
+import com.fear.oscar_voting_system.dto.ResponseUserVoteDTO;
 import com.fear.oscar_voting_system.dto.VoteDTO;
 import com.fear.oscar_voting_system.model.CategoryModel;
 import com.fear.oscar_voting_system.model.MovieModel;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,9 +61,24 @@ public class VoteService {
 
         return voteRepository.save(vote);
     }
-    public List<VoteModel> listVotesByUser(UUID userId) {
+    public List<ResponseUserVoteDTO> listVotesByUser(UUID userId) {
+        List<VoteModel> userVotes = voteRepository.findByUser_Id(userId);
+        List<ResponseUserVoteDTO> votesDTO = new ArrayList<>();
 
-        return voteRepository.findByUser_Id(userId);
+        for (VoteModel vote : userVotes) {
+            boolean isWinner = false;
+            if (vote.getCategory().getMovieWinning() != null) {
+                isWinner = vote.getCategory().getMovieWinning().getId().equals(vote.getMovie().getId());
+            }
+            votesDTO.add(new ResponseUserVoteDTO(
+                    vote.getId(),
+                    vote.getCategory().getName(),
+                    vote.getMovie().getName(),
+                    vote.getCategory().getId(),
+                    isWinner
+            ));
+        }
+        return votesDTO;
     }
 
     public List<VoteModel> showAllVotes(){

@@ -1,6 +1,7 @@
 package com.fear.oscar_voting_system.controller;
 
 
+import com.fear.oscar_voting_system.dto.ResponseUserVoteDTO;
 import com.fear.oscar_voting_system.dto.VoteDTO;
 import com.fear.oscar_voting_system.model.VoteModel;
 import com.fear.oscar_voting_system.service.VoteService;
@@ -31,8 +32,8 @@ public class VoteController {
         return ResponseEntity.status(HttpStatus.OK).body(voteService.showAllVotes());
     }
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<VoteModel>> listVotesByUser(@PathVariable UUID userId) {
-        List<VoteModel> votes = voteService.listVotesByUser(userId);
+    public ResponseEntity<List<ResponseUserVoteDTO>> listVotesByUser(@PathVariable UUID userId) {
+        List<ResponseUserVoteDTO> votes = voteService.listVotesByUser(userId);
         return ResponseEntity.ok(votes);
     }
 }

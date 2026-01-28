@@ -6,6 +6,7 @@ public record ResponseUserVoteDTO(
         UUID id,
         String categoryName,
         String movieName,
+        String movieImageUrl,
         UUID categoryId,
         boolean isWinner
 ) {

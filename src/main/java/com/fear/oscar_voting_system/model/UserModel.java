@@ -17,4 +17,8 @@ public class UserModel implements Serializable {
     @Column(unique = true)
     private String username;
     private String password;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String profilePictureUrl;
 }

@@ -43,7 +43,7 @@ public class RankingService {
                 if(movieWinning!= null && vote.getMovie().getId().equals(movieWinning.getId()))
                     score++;
             }
-            ranking.add(new ResponseUserScoreDTO(user.getId(),user.getUsername(), score));
+            ranking.add(new ResponseUserScoreDTO(user.getId(),user.getUsername(), score,user.getProfilePictureUrl()));
         }
         ranking.sort(Comparator.comparingInt(ResponseUserScoreDTO::score).reversed());
         return ranking;

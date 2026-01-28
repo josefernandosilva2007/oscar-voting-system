@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -29,4 +30,11 @@ public class UserService {
     public List<UserModel> listAllUsers(){
         return userRepository.findAll();
     }
+
+    public void updateProfilePicture(UUID id, String profilePictureUrl) {
+        UserModel user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
+        user.setProfilePictureUrl(profilePictureUrl);
+        userRepository.save(user);
+    }
+
 }

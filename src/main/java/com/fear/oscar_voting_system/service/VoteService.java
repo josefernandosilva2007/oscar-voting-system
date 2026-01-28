@@ -74,6 +74,7 @@ public class VoteService {
                     vote.getId(),
                     vote.getCategory().getName(),
                     vote.getMovie().getName(),
+                    vote.getMovie().getImageUrl(),
                     vote.getCategory().getId(),
                     isWinner
             ));
@@ -84,4 +85,6 @@ public class VoteService {
     public List<VoteModel> showAllVotes(){
         return voteRepository.findAll();
     }
+
+
 }

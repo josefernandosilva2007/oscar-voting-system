@@ -10,6 +10,7 @@ import com.fear.oscar_voting_system.repository.UserRepository;
 import com.fear.oscar_voting_system.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,6 +25,9 @@ public class RankingService {
     @Autowired
     UserRepository userRepository;
 
+
+
+    @Transactional(readOnly = true)
     public List<ResponseUserScoreDTO> rankingScore(){
         List<ResponseUserScoreDTO> ranking = new ArrayList<>();
         List<UserModel> allUsers = userRepository.findAll();

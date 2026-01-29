@@ -1,6 +1,5 @@
 package com.fear.oscar_voting_system.service;
 
-import com.fear.oscar_voting_system.dto.ResponseUserScoreDTO;
 import com.fear.oscar_voting_system.dto.ResponseUserVoteDTO;
 import com.fear.oscar_voting_system.dto.VoteDTO;
 import com.fear.oscar_voting_system.model.CategoryModel;
@@ -11,10 +10,10 @@ import com.fear.oscar_voting_system.repository.CategoryRepository;
 import com.fear.oscar_voting_system.repository.MovieRepository;
 import com.fear.oscar_voting_system.repository.UserRepository;
 import com.fear.oscar_voting_system.repository.VoteRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class VoteService {
         return voteRepository.save(vote);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ResponseUserVoteDTO> listVotesByUser(UUID userId) {
         List<VoteModel> userVotes = voteRepository.findByUser_Id(userId);
         List<ResponseUserVoteDTO> votesDTO = new ArrayList<>();
@@ -87,6 +86,7 @@ public class VoteService {
         return votesDTO;
     }
 
+    @Transactional(readOnly = true)
     public List<VoteModel> showAllVotes(){
         return voteRepository.findAll();
     }

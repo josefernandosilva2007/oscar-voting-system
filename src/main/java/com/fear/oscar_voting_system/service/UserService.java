@@ -1,8 +1,12 @@
 package com.fear.oscar_voting_system.service;
 
+import com.fear.oscar_voting_system.dto.ResponseUserVoteDTO;
 import com.fear.oscar_voting_system.dto.UserDTO;
+import com.fear.oscar_voting_system.dto.VoteDTO;
 import com.fear.oscar_voting_system.model.UserModel;
+import com.fear.oscar_voting_system.model.VoteModel;
 import com.fear.oscar_voting_system.repository.UserRepository;
+import com.fear.oscar_voting_system.repository.VoteRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +36,10 @@ public class UserService {
     }
 
     public void updateProfilePicture(UUID id, String profilePictureUrl) {
-        UserModel user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
-        user.setProfilePictureUrl(profilePictureUrl);
-        userRepository.save(user);
+        if(!userRepository.existsById(id)) throw new RuntimeException("esse usuario nao existe");
+        userRepository.updateProfilePicture(id, profilePictureUrl);
+
+
     }
 
 }

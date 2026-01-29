@@ -12,4 +12,5 @@ import java.util.UUID;
 public interface VoteRepository extends JpaRepository<VoteModel, UUID> {
     boolean existsByUser_IdAndCategory_Id(UUID userId, UUID categoryId);
     List<VoteModel> findByUser_Id(UUID userId);
+    List<VoteModel> findByUser_username(String username);
 }

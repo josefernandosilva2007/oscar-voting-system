@@ -27,7 +27,7 @@ public class RankingService {
 
 
 
-    @Transactional(readOnly = true)
+
     public List<ResponseUserScoreDTO> rankingScore(){
         List<ResponseUserScoreDTO> ranking = new ArrayList<>();
         List<UserModel> allUsers = userRepository.findAll();

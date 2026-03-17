@@ -23,7 +23,6 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    @CacheEvict(value = "users", allEntries = true)
     public UserModel saveUser(UserDTO userDTO){
         var userModel = new UserModel();
         BeanUtils.copyProperties(userDTO, userModel);
@@ -34,7 +33,6 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Login ou senha inválidos"));
     }
 
-    @Cacheable(value = "users", key = "'all_users'")
     public List<UserModel> listAllUsers(){
         return userRepository.findAll();
     }

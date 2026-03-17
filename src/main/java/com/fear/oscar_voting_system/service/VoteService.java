@@ -34,7 +34,6 @@ public class VoteService {
     CategoryRepository categoryRepository;
 
 
-    @CacheEvict(value = "user_vote", key = "#voteDTO.userId()")
     public VoteModel saveVote(VoteDTO voteDTO) {
         UserModel user =
                 userRepository.findById(voteDTO.userId())
@@ -69,7 +68,6 @@ public class VoteService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "user_vote", key = "#userId")
     public List<ResponseUserVoteDTO> listVotesByUser(UUID userId) {
         List<VoteModel> userVotes = voteRepository.findByUser_Id(userId);
         List<ResponseUserVoteDTO> votesDTO = new ArrayList<>();

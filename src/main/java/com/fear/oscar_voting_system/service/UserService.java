@@ -10,6 +10,8 @@ import com.fear.oscar_voting_system.repository.VoteRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -21,6 +23,7 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    @CacheEvict(value = "users", allEntries = true)
     public UserModel saveUser(UserDTO userDTO){
         var userModel = new UserModel();
         BeanUtils.copyProperties(userDTO, userModel);
@@ -31,6 +34,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Login ou senha inválidos"));
     }
 
+    @Cacheable(value = "users", key = "'all_users'")
     public List<UserModel> listAllUsers(){
         return userRepository.findAll();
     }

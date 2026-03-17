@@ -11,6 +11,7 @@ import com.fear.oscar_voting_system.repository.MovieRepository;
 import com.fear.oscar_voting_system.repository.UserRepository;
 import com.fear.oscar_voting_system.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,8 @@ public class VoteService {
     @Autowired
     CategoryRepository categoryRepository;
 
+
+    @CacheEvict(value = "user_vote", key = "#voteDTO.userId()")
     public VoteModel saveVote(VoteDTO voteDTO) {
         UserModel user =
                 userRepository.findById(voteDTO.userId())

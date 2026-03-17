@@ -11,6 +11,7 @@ import com.fear.oscar_voting_system.repository.MovieRepository;
 import com.fear.oscar_voting_system.repository.UserRepository;
 import com.fear.oscar_voting_system.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +66,7 @@ public class VoteService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "user_vote", key = "#userId")
     public List<ResponseUserVoteDTO> listVotesByUser(UUID userId) {
         List<VoteModel> userVotes = voteRepository.findByUser_Id(userId);
         List<ResponseUserVoteDTO> votesDTO = new ArrayList<>();

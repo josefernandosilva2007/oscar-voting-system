@@ -4,10 +4,10 @@ import java.util.UUID;
 
 public record ResponseUserVoteDTO(
         UUID id,
+        UUID categoryId,
         String categoryName,
         String movieName,
         String movieImageUrl,
-        UUID categoryId,
         boolean isWinner
 ) {
 }

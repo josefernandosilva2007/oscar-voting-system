@@ -5,6 +5,7 @@ import com.fear.oscar_voting_system.model.CategoryModel;
 import com.fear.oscar_voting_system.model.MovieModel;
 import com.fear.oscar_voting_system.repository.CategoryRepository;
 import com.fear.oscar_voting_system.repository.MovieRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ public class DataSeeder implements CommandLineRunner {
     private MovieRepository movieRepository;
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         // Evita duplicar dados se já rodou antes
         if (categoryRepository.count() > 0) {

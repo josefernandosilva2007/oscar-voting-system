@@ -20,15 +20,14 @@ public interface VoteRepository extends JpaRepository<VoteModel, UUID> {
         SELECT new com.fear.oscar_voting_system.dto.ResponseUserScoreDTO(
         u.id,
         u.username,
-        CAST(COUNT(v) AS int),
+        CAST(COUNT(CASE WHEN v.movie.id = c.movieWinning.id THEN 1 END) AS int),
         u.profilePictureUrl
         )
-        FROM VoteModel v
-        JOIN v.user u
-        JOIN v.category c
-        WHERE v.movie.id = c.movieWinning.id
+        FROM UserModel u
+        LEFT JOIN u.votes v
+        LEFT JOIN v.category c
         GROUP BY u.id, u.username, u.profilePictureUrl
-        ORDER BY COUNT(v) DESC
+        ORDER BY 3 DESC
 """)
     List<ResponseUserScoreDTO> getRanking();
 }

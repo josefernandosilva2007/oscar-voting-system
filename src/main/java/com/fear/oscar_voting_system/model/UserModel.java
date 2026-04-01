@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,7 +18,8 @@ public class UserModel implements Serializable {
     @Column(unique = true)
     private String username;
     private String password;
-
+    @OneToMany(mappedBy = "user")
+    private List<VoteModel> votes;
     @Lob
     @Column(columnDefinition = "TEXT")
     private String profilePictureUrl;

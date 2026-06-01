@@ -1,26 +1,31 @@
 package com.fear.oscar_voting_system.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Movie")
+@Table(name = "movie")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class MovieModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
-    private String director;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id")
+    private PersonModel person;
+
+    private String synopsis;
+
     private String imageUrl;
-
-
-    @ManyToMany
-    @JsonIgnore
-    private List<CategoryModel> categories;
 }

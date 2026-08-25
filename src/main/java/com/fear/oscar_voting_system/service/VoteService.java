@@ -4,14 +4,8 @@ import com.fear.oscar_voting_system.dto.ResponseUserVoteDTO;
 import com.fear.oscar_voting_system.dto.VoteDTO;
 import com.fear.oscar_voting_system.exception.BusinessException;
 import com.fear.oscar_voting_system.exception.ResourceNotFoundException;
-import com.fear.oscar_voting_system.model.CategoryModel;
-import com.fear.oscar_voting_system.model.MovieModel;
-import com.fear.oscar_voting_system.model.UserModel;
-import com.fear.oscar_voting_system.model.VoteModel;
-import com.fear.oscar_voting_system.repository.CategoryRepository;
-import com.fear.oscar_voting_system.repository.MovieRepository;
-import com.fear.oscar_voting_system.repository.UserRepository;
-import com.fear.oscar_voting_system.repository.VoteRepository;
+import com.fear.oscar_voting_system.model.*;
+import com.fear.oscar_voting_system.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -28,68 +22,59 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class VoteService {
-    private final VoteRepository voteRepository;
-    private final UserRepository userRepository;
-    private final MovieRepository movieRepository;
-    private final CategoryRepository categoryRepository;
+    @Autowired
+    private VoteRepository voteRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private NominationRepository nominationRepository;
 
 
     public VoteModel saveVote(VoteDTO voteDTO) {
         UserModel user =
                 userRepository.findById(voteDTO.userId())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));
-        MovieModel movie =
-                movieRepository.findById(voteDTO.movieId())
-                .orElseThrow(() -> new ResourceNotFoundException("Filme nao Encontrado"));
-        CategoryModel category =
-                categoryRepository.findById(voteDTO.categoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Categoria nao Encontrado"));
+                        .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));
+        NominationModel nomination =
+                nominationRepository.findById(voteDTO.nominationId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Indicação não encontrada"));
 
+        CategoryModel category = nomination.getCategory();
 
-        boolean categoryFound =
-                movie.getCategories()
-                .stream()
-                .anyMatch(c -> c.getId().equals(category.getId()));
-
-        if (!categoryFound)
-            throw new RuntimeException("Este filme nao concorre na categoria");
-
-        if (voteRepository.existsByUser_IdAndCategory_Id(user.getId(),category.getId()))
+        if (voteRepository.existsByUser_IdAndCategory_Id(user.getId(), category.getId()))
             throw new BusinessException("Você já votou nesta categoria!");
 
         VoteModel vote = VoteModel
                 .builder()
                 .user(user)
-                .movie(movie)
+                .nomination(nomination)
                 .category(category)
                 .build();
 
         return voteRepository.save(vote);
     }
 
-    @Transactional(readOnly = true)
-    public List<ResponseUserVoteDTO> listVotesByUser(UUID userId) {
-        return voteRepository.findByUser_Id(userId).stream()
-                .map(vote -> {
-                   Boolean isWinner = Optional.ofNullable(vote.getCategory().getMovieWinning())
-                           .map(winner -> winner.getId().equals(vote.getMovie().getId()))
-                           .orElse(false);
+//    @Transactional(readOnly = true)
+//    public List<ResponseUserVoteDTO> listVotesByUser(UUID userId) {
+//        return voteRepository.findByUser_Id(userId).stream()
+//                .map(vote -> {
+//                    Boolean isWinner = Optional.ofNullable(vote.getCategory().getMovieWinning())
+//                            .map(winner -> winner.getId().equals(vote.getMovie().getId()))
+//                            .orElse(false);
+//
+//                    return new ResponseUserVoteDTO(
+//                            vote.getId(),
+//                            vote.getCategory().getId(),
+//                            vote.getCategory().getName(),
+//                            vote.getMovie().getName(),
+//                            vote.getMovie().getImageUrl(),
+//                            isWinner
+//                    );
+//                }).collect(Collectors.toList());
+//    }
 
-                   return new ResponseUserVoteDTO(
-                           vote.getId(),
-                           vote.getCategory().getId(),
-                           vote.getCategory().getName(),
-                           vote.getMovie().getName(),
-                           vote.getMovie().getImageUrl(),
-                           isWinner
-                   );
-                }).collect(Collectors.toList());
-    }
-
     @Transactional(readOnly = true)
-    public List<VoteModel> showAllVotes(){
+    public List<VoteModel> showAllVotes() {
         return voteRepository.findAll();
     }
 

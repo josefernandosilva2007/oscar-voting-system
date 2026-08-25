@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface MovieRepository extends JpaRepository<MovieModel, UUID> {
-    long countByCategories_Id(UUID categoryId);
+//    long countByCategories_Id(UUID categoryId);
 }

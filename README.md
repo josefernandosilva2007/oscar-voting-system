@@ -1,71 +1,53 @@
-# 🏆 Oscar Voting System API
+# OCG — Oscar com os Gurizes
 
-API REST desenvolvida para gerenciar um sistema de votação para o Oscar. O objetivo é permitir que usuários cadastrem filmes, categorias e realizem votos computados em tempo real.
+Bolão do Oscar entre amigos, como API. Cada um palpita nos indicados de cada categoria; quando sai o resultado oficial, o ranking mostra quem acertou mais.
 
-> 🚧 **Status:** Em desenvolvimento
+**Stack:** Java 21 · Spring Boot 3 · PostgreSQL · Docker
 
-## 🛠️ Tecnologias Utilizadas
+## Rodando em 2 comandos
 
-* **Java 21** (LTS)
-* **Spring Boot 3**
-* **PostgreSQL** (via Docker)
-* **Docker Compose**
-* **Lombok**
-* **Maven**
+```bash
+docker compose up -d     # sobe o PostgreSQL
+./mvnw spring-boot:run   # sobe a API em localhost:8080
+```
 
-## ⚙️ Como rodar o projeto
+Pré-requisitos: Java 21 e Docker.
 
-### Pré-requisitos
+## A ideia
 
-* Java 21 instalado
-* Docker e Docker Compose instalados
-* Git
+- Existem **categorias** (Melhor Filme, Melhor Ator...) e **indicações** — um filme ou pessoa concorrendo em uma categoria num ano.
+- Cada participante dá **um palpite por categoria**. Não vale mudar depois nem votar duas vezes — a API bloqueia.
+- Quando o vencedor oficial é definido, um `GET /ranking` conta quantos palpites cada um acertou e ordena a galera.
 
-### Passo a passo
+## Rotas principais
 
-1.  **Clone este repositório:**
-    ```bash
-    git clone [https://github.com/josefernandosilva2007/oscar-voting-system.git](https://github.com/josefernandosilva2007/oscar-voting-system.git)
-    ```
+```
+POST   /users                        cria participante
+POST   /users/login                  login
+POST   /categories                   cria categoria
+PATCH  /categories/{id}/winner       define o vencedor oficial
+POST   /movies                       cadastra filme
+POST   /votes                        registra palpite
+GET    /votes/user/{userId}          palpites de alguém
+GET    /ranking                      quem tá ganhando o bolão
+```
 
-2.  **Acesse a pasta do projeto:**
-    ```bash
-    cd oscar-voting-system
-    ```
+Exemplo de palpite:
 
-3.  **Suba o banco de dados via Docker:**
-    ```bash
-    docker compose up -d
-    ```
+```bash
+curl -X POST localhost:8080/votes \
+  -H 'Content-Type: application/json' \
+  -d '{"userId": "...", "nominationId": "..."}'
+```
 
-4.  **Inicie a aplicação:**
-    ```bash
-    ./mvnw spring-boot:run
-    ```
+## O que eu pratiquei aqui
 
-5.  A API estará rodando em: `http://localhost:8080`
-
-## 📡 Endpoints Principais
-
-Você pode testar utilizando **Insomnia** ou **Postman**.
-
-### Usuários
-* `POST /users` - Cadastrar novo usuário
-* `GET /users` - Listar usuários
-
-### Categorias
-* `POST /categories` - Cadastrar nova categoria (ex: "Melhor Filme")
-* `GET /categories` - Listar categorias
-
-## 📝 Roadmap do Projeto
-
-- [x] **Infraestrutura:** Configuração do Docker, PostgreSQL e conexão JPA.
-- [x] **Recursos Básicos:** CRUD de Usuários e Categorias.
-- [ ] **Filmes:** Cadastro de filmes vinculados a categorias.
-- [ ] **Votos:** Lógica de votação (Regra: um voto por usuário/categoria).
-- [ ] **Segurança:** Autenticação e Autorização com Spring Security.
-- [ ] **Ranking:** Endpoint para contagem de votos e ranking final.
+- Arquitetura em camadas (controller → service → repository) com DTOs
+- Regra de negócio de verdade: um palpite por usuário/categoria
+- Tratamento de erros centralizado com `@ControllerAdvice` e exceções de domínio
+- Ranking calculado com agregação em JPQL direto no banco
+- Containerização do PostgreSQL com Docker Compose
 
 ---
 
-Desenvolvido como projeto de estudo prático focando em **Engenharia de Software** e boas práticas de mercado.
+*Projeto de estudo. Sugestões e reviews são bem-vindos.*

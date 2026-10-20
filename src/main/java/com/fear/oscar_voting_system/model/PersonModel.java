@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.UUID;
 
+@lombok.Data
+@lombok.NoArgsConstructor
 @Entity
 @Table(name = "person")
 public class PersonModel implements Serializable {
@@ -17,6 +19,7 @@ public class PersonModel implements Serializable {
 
     @NotNull
     @Size(max = 100, message = "The name cannot exceed 100 characters")
+    @Column(nullable = false, length = 100)
     private String name;
 
     private String imageUrl;

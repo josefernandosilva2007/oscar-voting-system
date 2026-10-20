@@ -19,13 +19,14 @@ public class MovieModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @Column(nullable = false, length = 200)
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "person_id")
     private PersonModel person;
 
+    @Column(columnDefinition = "TEXT")
     private String synopsis;
 
-    private String imageUrl;
 }

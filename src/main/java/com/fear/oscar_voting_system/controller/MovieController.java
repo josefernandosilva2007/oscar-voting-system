@@ -1,11 +1,8 @@
 package com.fear.oscar_voting_system.controller;
 
 
-import com.fear.oscar_voting_system.dto.CategoryDTO;
 import com.fear.oscar_voting_system.dto.MovieDTO;
-import com.fear.oscar_voting_system.model.CategoryModel;
 import com.fear.oscar_voting_system.model.MovieModel;
-import com.fear.oscar_voting_system.service.CategoryService;
 import com.fear.oscar_voting_system.service.MovieService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

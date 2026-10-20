@@ -1,6 +1,5 @@
 package com.fear.oscar_voting_system.repository;
 
-import com.fear.oscar_voting_system.model.CategoryModel;
 import com.fear.oscar_voting_system.model.MovieModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

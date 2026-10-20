@@ -11,13 +11,11 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user")
+@Table(name = "app_user")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,16 +26,19 @@ public class UserModel implements Serializable {
     private UUID id;
 
     @NotNull
+    @Column(nullable = false, unique = true, length = 100)
     private String username;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false, length = 255)
     @NotNull
     private String email;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @Column(nullable = false, length = 255)
     private String passwordHashed;
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<VoteModel> votes;
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
 

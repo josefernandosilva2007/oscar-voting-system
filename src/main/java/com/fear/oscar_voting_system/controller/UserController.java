@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -27,9 +26,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userDTO));
     }
     @PostMapping("/login")
-    public ResponseEntity<UserModel> login(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
+    public ResponseEntity<UserModel> login(@RequestBody @Valid com.fear.oscar_voting_system.dto.LoginDTO credentials) {
+        String username = credentials.username();
+        String password = credentials.password();
         UserModel user = userService.executeLogin(username, password);
 
         return ResponseEntity.ok(user);

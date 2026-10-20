@@ -26,17 +26,17 @@ public class VoteModel implements Serializable{
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @NotNull
     private UserModel user;
 
     @ManyToOne
-    @JoinColumn(name = "nomination_id")
+    @JoinColumn(name = "nomination_id", nullable = false)
     @NotNull
     private NominationModel nomination;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     @NotNull
     private CategoryModel category;
 

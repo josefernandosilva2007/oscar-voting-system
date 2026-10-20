@@ -1,37 +1,21 @@
 package com.fear.oscar_voting_system.service;
-
 import com.fear.oscar_voting_system.dto.MovieDTO;
-import com.fear.oscar_voting_system.model.MovieModel;
-import com.fear.oscar_voting_system.repository.CategoryRepository;
-import com.fear.oscar_voting_system.repository.MovieRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fear.oscar_voting_system.model.*;
+import com.fear.oscar_voting_system.repository.*;
+import com.fear.oscar_voting_system.exception.ResourceNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-
 @Service
+@RequiredArgsConstructor
 public class MovieService {
-    @Autowired
-    MovieRepository movieRepository;
-
-    public void saveMovie(MovieDTO movieDTO){
-        MovieModel model = MovieModel.builder()
-                .name(movieDTO.name())
-                .person(movieDTO.person())
-                .synopsis(movieDTO.synopsis())
-                .imageUrl(movieDTO.imageUrl())
-                .build();
-
-        movieRepository.save(model);
+    private final MovieRepository movieRepository;
+    private final PersonRepository personRepository;
+    public MovieModel saveMovie(MovieDTO dto) {
+        PersonModel person = dto.personId() == null ? null : personRepository.findById(dto.personId())
+            .orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada"));
+        return movieRepository.save(MovieModel.builder().name(dto.name()).person(person)
+            .synopsis(dto.synopsis()).build());
     }
-
-
-    public List<MovieModel> listAllMovies(){return movieRepository.findAll();}
-
-
-
-
-
-
-
+    public List<MovieModel> listAllMovies() { return movieRepository.findAll(); }
 }

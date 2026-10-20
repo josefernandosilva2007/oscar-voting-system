@@ -23,23 +23,27 @@ public class NominationModel implements Serializable {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     @NotNull
     private CategoryModel category;
 
     @ManyToOne
-    @JoinColumn(name = "movie_id")
+    @JoinColumn(name = "movie_id", nullable = false)
     @NotNull
     private MovieModel movie;
 
     @ManyToOne
-    @JoinColumn(name = "person_id")
+    @JoinColumn(name = "person_id", nullable = false)
     @NotNull
     private PersonModel person;
 
     private int year;
 
 
+
+    @NotNull
+    @Column(nullable = false)
+    private Integer status;
 
     private Boolean isWinner;
 }

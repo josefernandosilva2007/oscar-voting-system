@@ -22,4 +22,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(error.status()).body(error);
     }
 
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorMessage> handleIntegrity() {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+            new ErrorMessage(409, "Dados duplicados ou referência inválida", System.currentTimeMillis()));
+    }
 }

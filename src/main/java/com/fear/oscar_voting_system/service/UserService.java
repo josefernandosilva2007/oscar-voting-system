@@ -21,6 +21,10 @@ public class UserService {
     private final TokenService tokenService;
     @Value("${oscar.auth.admin-username:}")
     private String adminUsername;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this(userRepository, passwordEncoder,
+            new TokenService("local-development-secret-change-before-deploy-32chars"));
+    }
     public UserModel saveUser(UserDTO dto) {
         if (!adminUsername.isBlank() && adminUsername.equalsIgnoreCase(dto.username()))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Nome de usuário reservado");

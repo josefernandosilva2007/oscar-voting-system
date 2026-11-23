@@ -4,6 +4,10 @@ package com.fear.oscar_voting_system.controller;
 import com.fear.oscar_voting_system.dto.UpdateProfilePictureDTO;
 import com.fear.oscar_voting_system.dto.UserDTO;
 import com.fear.oscar_voting_system.dto.LoginResponseDTO;
+import com.fear.oscar_voting_system.dto.ShareCardDTO;
+import com.fear.oscar_voting_system.service.ShareCardService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.access.AccessDeniedException;
 import com.fear.oscar_voting_system.model.UserModel;
 import com.fear.oscar_voting_system.service.UserService;
 import jakarta.validation.Valid;
@@ -21,6 +25,8 @@ import java.util.UUID;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    ShareCardService shareCardService;
 
     @PostMapping
     public ResponseEntity<UserModel> saveUser(@RequestBody @Valid UserDTO userDTO){
@@ -40,5 +46,12 @@ public class UserController {
     public ResponseEntity<Void> updateProfilePicture(@PathVariable UUID id, @RequestBody @Valid UpdateProfilePictureDTO dto){
         userService.updateProfilePicture(id, dto.pictureUrl());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/share-card/{year}")
+    public ShareCardDTO shareCard(@PathVariable UUID id, @PathVariable int year, Authentication auth) {
+        if (!auth.getName().equals(id.toString()) && !auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")))
+            throw new AccessDeniedException("Ação permitida apenas para o próprio participante");
+        return shareCardService.getCard(id, year);
     }
 }

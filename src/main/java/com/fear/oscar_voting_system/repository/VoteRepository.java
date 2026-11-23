@@ -6,6 +6,7 @@ import java.util.*;
 public interface VoteRepository extends JpaRepository<VoteModel, UUID> {
     boolean existsByUser_IdAndCategory_IdAndNomination_Year(UUID userId, UUID categoryId, int year);
     List<VoteModel> findByUser_Id(UUID userId);
+    List<VoteModel> findByUser_IdAndYear(UUID userId, int year);
     @Query("""
         SELECT new com.fear.oscar_voting_system.dto.ResponseUserScoreDTO(
             u.id, u.username,

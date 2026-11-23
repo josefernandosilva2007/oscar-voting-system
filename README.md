@@ -34,7 +34,17 @@ GET    /nominations                  lista indicações
 POST   /votes                        registra palpite
 GET    /votes/user/{userId}          palpites de alguém
 GET    /ranking                      quem tá ganhando o bolão
+GET    /ranking/{year}               ranking de uma edição
+GET    /users/{id}/share-card/{year}  resumo anual para compartilhar
+GET    /nominations/ceremony/{year}/progress  andamento da cerimônia
+PUT    /votes/{voteId}                altera palpite antes do prazo
 ```
+
+## Autenticação e prazo de votação
+
+O login retorna um token Bearer válido por 24 horas. Envie `Authorization: Bearer <token>` nas rotas protegidas. Configure `OSCAR_AUTH_SECRET` com pelo menos 32 bytes e `OSCAR_AUTH_ADMIN_USERNAME` com o nome de usuário reservado para administração. Cadastre essa conta diretamente no banco antes de ativar o nome reservado. Administradores cadastram categorias, filmes, pessoas e indicações e definem vencedores. Participantes só podem consultar ou alterar os próprios palpites.
+
+Configure `OSCAR_VOTING_DEADLINE` no formato ISO `AAAA-MM-DDTHH:mm:ss`. Sem configuração, a API mantém o prazo aberto. A lista geral de palpites fica oculta até esse instante.
 
 Exemplo de palpite:
 

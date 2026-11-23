@@ -8,6 +8,7 @@ import com.fear.oscar_voting_system.dto.ShareCardDTO;
 import com.fear.oscar_voting_system.service.ShareCardService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import com.fear.oscar_voting_system.model.UserModel;
 import com.fear.oscar_voting_system.service.UserService;
 import jakarta.validation.Valid;
@@ -43,7 +44,9 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/picture")
-    public ResponseEntity<Void> updateProfilePicture(@PathVariable UUID id, @RequestBody @Valid UpdateProfilePictureDTO dto){
+    public ResponseEntity<Void> updateProfilePicture(@PathVariable UUID id, @RequestBody @Valid UpdateProfilePictureDTO dto, Authentication auth){
+        if (!auth.getName().equals(id.toString()) && !auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")))
+            throw new AccessDeniedException("Ação permitida apenas para o próprio participante");
         userService.updateProfilePicture(id, dto.pictureUrl());
         return ResponseEntity.noContent().build();
     }

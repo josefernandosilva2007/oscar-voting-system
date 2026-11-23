@@ -15,7 +15,7 @@ public class MovieService {
         PersonModel person = dto.personId() == null ? null : personRepository.findById(dto.personId())
             .orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada"));
         return movieRepository.save(MovieModel.builder().name(dto.name()).person(person)
-            .synopsis(dto.synopsis()).build());
+            .synopsis(dto.synopsis()).imageUrl(dto.imageUrl()).build());
     }
     public List<MovieModel> listAllMovies() { return movieRepository.findAll(); }
 }

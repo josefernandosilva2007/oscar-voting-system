@@ -7,8 +7,11 @@ import com.fear.oscar_voting_system.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 @Service
 @RequiredArgsConstructor
 public class NominationService {
@@ -17,13 +20,17 @@ public class NominationService {
     private final CategoryRepository categoryRepository;
     private final MovieRepository movieRepository;
     private final PersonRepository personRepository;
+    private final Environment environment;
     @Value("${oscar.voting.deadline:9999-12-31T23:59:59}")
     private LocalDateTime votingDeadline;
 
     public CeremonyProgressDTO progress(int year) {
+        String startsAt = environment.getProperty("oscar.ceremony." + year + ".starts-at");
+        boolean ceremonyStarted = startsAt != null && !startsAt.isBlank()
+            && !Instant.now().isBefore(OffsetDateTime.parse(startsAt).toInstant());
         return new CeremonyProgressDTO(year, nominationRepository.countDistinctByYear(year),
             nominationRepository.countDistinctByYearAndIsWinnerIsNotNull(year),
-            LocalDateTime.now().isBefore(votingDeadline));
+            LocalDateTime.now().isBefore(votingDeadline), ceremonyStarted);
     }
 
     public List<NominationModel> list() { return nominationRepository.findAll(); }

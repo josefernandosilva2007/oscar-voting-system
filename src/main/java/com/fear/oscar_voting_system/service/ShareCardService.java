@@ -20,14 +20,16 @@ public class ShareCardService {
     public ShareCardDTO getCard(UUID userId, int year) {
         var user = users.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         var predictions = votes.findByUser_IdAndYear(userId, year);
-        int rank = 1;
+        int rank = 0;
         int points = 0;
-        for (ResponseUserScoreDTO score : ranking.rankingScore(year)) {
+        var scores = ranking.rankingScore(year);
+        for (int index = 0; index < scores.size(); index++) {
+            ResponseUserScoreDTO score = scores.get(index);
             if (score.id().equals(userId)) {
                 points = score.score();
+                rank = index + 1;
                 break;
             }
-            rank++;
         }
         long correct = predictions.stream().filter(v -> Boolean.TRUE.equals(v.getNomination().getIsWinner())).count();
         return new ShareCardDTO(userId, user.getUsername(), user.getImageUrl(), year, rank, points, predictions.size(), correct);

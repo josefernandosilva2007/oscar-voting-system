@@ -25,7 +25,7 @@ public class VoteService {
     private NominationRepository nominationRepository;
 
     @Value("${oscar.voting.deadline:9999-12-31T23:59:59}")
-    private LocalDateTime votingDeadline;
+    private LocalDateTime votingDeadline = LocalDateTime.of(9999, 12, 31, 23, 59, 59);
 
 
     @Transactional

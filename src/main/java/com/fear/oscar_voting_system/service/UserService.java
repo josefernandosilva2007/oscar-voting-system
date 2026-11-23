@@ -12,15 +12,16 @@ import org.springframework.http.HttpStatus;
 import com.fear.oscar_voting_system.security.TokenService;
 import com.fear.oscar_voting_system.dto.LoginResponseDTO;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     @Value("${oscar.auth.admin-username:}")
-    private String adminUsername;
+    private String adminUsername = "";
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this(userRepository, passwordEncoder,
             new TokenService("local-development-secret-change-before-deploy-32chars"));

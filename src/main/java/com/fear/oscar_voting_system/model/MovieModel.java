@@ -29,4 +29,6 @@ public class MovieModel implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String synopsis;
 
+    private String imageUrl;
+
 }

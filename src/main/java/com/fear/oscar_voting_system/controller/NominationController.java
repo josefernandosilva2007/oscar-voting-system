@@ -14,6 +14,10 @@ public class NominationController {
     private final NominationService service;
     @GetMapping
     public List<NominationModel> list() { return service.list(); }
+    @GetMapping("/ceremony/{year}/progress")
+    public com.fear.oscar_voting_system.dto.CeremonyProgressDTO progress(@PathVariable int year) {
+        return service.progress(year);
+    }
     @PostMapping
     public ResponseEntity<NominationModel> create(@RequestBody @Valid NominationDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(dto));

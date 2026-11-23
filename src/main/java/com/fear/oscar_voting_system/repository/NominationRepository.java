@@ -5,4 +5,6 @@ import java.util.List;
 import java.util.UUID;
 public interface NominationRepository extends JpaRepository<NominationModel, UUID> {
     List<NominationModel> findByCategory_IdAndYear(UUID categoryId, int year);
+    long countDistinctByYear(int year);
+    long countDistinctByYearAndIsWinnerIsNotNull(int year);
 }

@@ -86,6 +86,8 @@ public class VoteService {
 
     @Transactional(readOnly = true)
     public List<VoteModel> showAllVotes() {
+        if (LocalDateTime.now().isBefore(votingDeadline))
+            throw new BusinessException("Os palpites serão revelados após o encerramento das votações");
         return voteRepository.findAll();
     }
 

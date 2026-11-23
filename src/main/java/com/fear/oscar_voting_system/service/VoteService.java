@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class VoteService {
@@ -22,8 +24,13 @@ public class VoteService {
     @Autowired
     private NominationRepository nominationRepository;
 
+    @Value("${oscar.voting.deadline:9999-12-31T23:59:59}")
+    private LocalDateTime votingDeadline;
 
+
+    @Transactional
     public VoteModel saveVote(VoteDTO voteDTO) {
+        ensureVotingOpen();
         UserModel user =
                 userRepository.findById(voteDTO.userId())
                         .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));
@@ -41,9 +48,30 @@ public class VoteService {
                 .user(user)
                 .nomination(nomination)
                 .category(category)
+                .year(nomination.getYear())
                 .build();
 
         return voteRepository.save(vote);
+    }
+
+    @Transactional
+    public VoteModel updateVote(UUID voteId, VoteDTO voteDTO) {
+        ensureVotingOpen();
+        VoteModel vote = voteRepository.findById(voteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Palpite não encontrado"));
+        if (!vote.getUser().getId().equals(voteDTO.userId()))
+            throw new BusinessException("Este palpite pertence a outro participante");
+        NominationModel nomination = nominationRepository.findById(voteDTO.nominationId())
+                .orElseThrow(() -> new ResourceNotFoundException("Indicação não encontrada"));
+        if (!nomination.getCategory().getId().equals(vote.getCategory().getId()) || nomination.getYear() != vote.getYear())
+            throw new BusinessException("A indicação deve pertencer à mesma categoria e edição");
+        vote.setNomination(nomination);
+        return voteRepository.save(vote);
+    }
+
+    private void ensureVotingOpen() {
+        if (!LocalDateTime.now().isBefore(votingDeadline))
+            throw new BusinessException("O prazo para palpites terminou");
     }
 
     @Transactional(readOnly = true)

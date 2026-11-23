@@ -35,4 +35,9 @@ public class VoteController {
         List<ResponseUserVoteDTO> votes = voteService.listVotesByUser(userId);
         return ResponseEntity.ok(votes);
     }
+
+    @PutMapping("/{voteId}")
+    public ResponseEntity<VoteModel> updateVote(@PathVariable UUID voteId, @RequestBody @Valid VoteDTO data) {
+        return ResponseEntity.ok(voteService.updateVote(voteId, data));
+    }
 }

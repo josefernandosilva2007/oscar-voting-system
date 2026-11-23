@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "vote")
+@Table(name = "vote", uniqueConstraints = @UniqueConstraint(name = "uk_vote_user_category_year", columnNames = {"user_id", "category_id", "year"}))
 @Data
 @Builder
 @AllArgsConstructor
@@ -34,6 +34,9 @@ public class VoteModel implements Serializable{
     @JoinColumn(name = "nomination_id", nullable = false)
     @NotNull
     private NominationModel nomination;
+
+    @Column(name = "year", nullable = false)
+    private Integer year;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)

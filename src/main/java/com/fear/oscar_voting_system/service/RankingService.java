@@ -17,4 +17,8 @@ public class RankingService {
         return voteRepository.getRanking();
     }
 
+    public List<ResponseUserScoreDTO> rankingScore(int year) {
+        return voteRepository.getRankingByYear(year);
+    }
+
 }

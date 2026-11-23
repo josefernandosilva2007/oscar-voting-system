@@ -15,4 +15,14 @@ public interface VoteRepository extends JpaRepository<VoteModel, UUID> {
         ORDER BY 3 DESC, u.username ASC
         """)
     List<ResponseUserScoreDTO> getRanking();
+
+    @Query("""
+        SELECT new com.fear.oscar_voting_system.dto.ResponseUserScoreDTO(
+            u.id, u.username,
+            CAST(SUM(CASE WHEN n.isWinner = true THEN 1 ELSE 0 END) AS int), u.imageUrl)
+        FROM UserModel u LEFT JOIN u.votes v ON v.year = :year LEFT JOIN v.nomination n
+        GROUP BY u.id, u.username, u.imageUrl
+        ORDER BY 3 DESC, u.username ASC
+        """)
+    List<ResponseUserScoreDTO> getRankingByYear(int year);
 }

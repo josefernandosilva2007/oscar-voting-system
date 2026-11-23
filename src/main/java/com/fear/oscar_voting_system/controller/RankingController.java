@@ -18,4 +18,9 @@ public class RankingController {
     public List<ResponseUserScoreDTO> getRanking(){
         return rankingService.rankingScore();
     }
+
+    @GetMapping("/ranking/{year}")
+    public List<ResponseUserScoreDTO> getRankingByYear(@PathVariable int year) {
+        return rankingService.rankingScore(year);
+    }
 }

@@ -23,6 +23,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/categories", "/movies", "/people", "/nominations", "/nominations/ceremony/**", "/ranking/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/categories", "/movies", "/people", "/nominations", "/catalog/preview").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/categories/*", "/categories/*/winner", "/people/*", "/movies/*", "/nominations/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/awards/champion-2025").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/categories/*", "/people/*", "/movies/*", "/nominations/*").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/votes").hasRole("ADMIN")
                 .anyRequest().authenticated())

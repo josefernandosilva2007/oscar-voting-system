@@ -42,6 +42,13 @@ public class UserModel implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private String displayedAward;
+
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @Column(unique = true)
+    private Integer manualChampionYear;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

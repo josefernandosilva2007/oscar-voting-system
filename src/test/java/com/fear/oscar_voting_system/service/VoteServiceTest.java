@@ -5,6 +5,7 @@ import com.fear.oscar_voting_system.dto.VoteDTO;
 import com.fear.oscar_voting_system.model.*;
 import com.fear.oscar_voting_system.repository.*;
 import com.fear.oscar_voting_system.exception.ResourceNotFoundException;
+import com.fear.oscar_voting_system.exception.BusinessException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -34,6 +35,19 @@ class VoteServiceTest {
         assertSame(nomination, result.getNomination());
         assertSame(user, result.getUser());
     }
+    @Test void rejectsNewAndUpdatedPicksForClosedNomination() {
+        UUID userId = UUID.randomUUID(), nominationId = UUID.randomUUID(), voteId = UUID.randomUUID();
+        var user = TestFixtures.user().id(userId).build();
+        var closed = TestFixtures.nomination().id(nominationId).status(0).build();
+        when(users.findById(userId)).thenReturn(Optional.of(user));
+        when(nominations.findById(nominationId)).thenReturn(Optional.of(closed));
+        when(votes.findById(voteId)).thenReturn(Optional.of(TestFixtures.vote().user(user).build()));
+        var request = new VoteDTO(userId, nominationId);
+        assertThrows(BusinessException.class, () -> service.saveVote(request));
+        assertThrows(BusinessException.class, () -> service.updateVote(voteId, request));
+        verify(votes, never()).save(any());
+    }
+
     @Test void rejectsMissingUserBeforeSaving() {
         UUID id = UUID.randomUUID();
         when(users.findById(id)).thenReturn(Optional.empty());

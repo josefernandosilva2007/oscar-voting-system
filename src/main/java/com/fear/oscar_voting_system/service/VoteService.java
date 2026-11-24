@@ -34,9 +34,7 @@ public class VoteService {
         UserModel user =
                 userRepository.findById(voteDTO.userId())
                         .orElseThrow(() -> new ResourceNotFoundException("Usuario nao encontrado"));
-        NominationModel nomination =
-                nominationRepository.findById(voteDTO.nominationId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Indicação não encontrada"));
+        NominationModel nomination = openNomination(voteDTO.nominationId());
 
         CategoryModel category = nomination.getCategory();
 
@@ -61,12 +59,19 @@ public class VoteService {
                 .orElseThrow(() -> new ResourceNotFoundException("Palpite não encontrado"));
         if (!vote.getUser().getId().equals(voteDTO.userId()))
             throw new BusinessException("Este palpite pertence a outro participante");
-        NominationModel nomination = nominationRepository.findById(voteDTO.nominationId())
-                .orElseThrow(() -> new ResourceNotFoundException("Indicação não encontrada"));
+        NominationModel nomination = openNomination(voteDTO.nominationId());
         if (!nomination.getCategory().getId().equals(vote.getCategory().getId()) || nomination.getYear() != vote.getYear())
             throw new BusinessException("A indicação deve pertencer à mesma categoria e edição");
         vote.setNomination(nomination);
         return voteRepository.save(vote);
+    }
+
+    private NominationModel openNomination(UUID id) {
+        NominationModel nomination = nominationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Indicação não encontrada"));
+        if (Integer.valueOf(0).equals(nomination.getStatus()))
+            throw new BusinessException("Esta indicação está fechada para palpites");
+        return nomination;
     }
 
     private void ensureVotingOpen() {

@@ -74,7 +74,7 @@ curl -X POST localhost:8080/votes \
 - `POST /movies`: `name`, `synopsis` e `personId` opcionais.
 - `POST /categories`: `name`.
 - `POST /nominations`: `categoryId`, `movieId`, `personId`, `year`, `status`.
-- `status` é um inteiro obrigatório conforme o diagrama; seus valores de negócio ainda não foram definidos.
+- No cadastro, `status` aceita `1` (aberta para palpites) ou `0` (fechada). O prazo geral também se aplica. Indicações antigas com outros códigos continuam abertas até o prazo.
 - `isWinner` permanece nulo até a definição do resultado. Definir vencedor atualiza as indicações da mesma categoria e ano.
 - O ranking soma acertos de todos os anos cadastrados.
 

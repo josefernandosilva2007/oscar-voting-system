@@ -4,6 +4,8 @@ import com.fear.oscar_voting_system.exception.BusinessException;
 import com.fear.oscar_voting_system.exception.ResourceNotFoundException;
 import com.fear.oscar_voting_system.model.UserModel;
 import com.fear.oscar_voting_system.repository.NominationRepository;
+import com.fear.oscar_voting_system.repository.AssignedAwardRepository;
+import com.fear.oscar_voting_system.model.AssignedAward;
 import com.fear.oscar_voting_system.repository.UserRepository;
 import com.fear.oscar_voting_system.service.RankingService;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +22,12 @@ public class AwardController {
     private final UserRepository users;
     private final NominationRepository nominations;
     private final RankingService ranking;
+    private final AssignedAwardRepository assigned;
 
     public record Tag(String id, String label, int position) {}
     public record Preference(String id) {}
     public record Grant(UUID userId) {}
+    public record Assignment(UUID userId, String label) {}
     public record Awards(Map<UUID, Tag> displayed, List<Tag> available, String preference, UUID champion2025) {}
 
     @GetMapping
@@ -71,6 +75,27 @@ public class AwardController {
         recipient.setManualChampionYear(2025);
     }
 
+    @PutMapping("/assign")
+    @Transactional
+    public synchronized void assign(@RequestBody Assignment request) {
+        if (request.userId() == null) throw new BusinessException("Escolhe um participante.");
+        String label = request.label() == null ? "" : request.label().strip().replaceAll("\\s+", " ");
+        if (label.isEmpty() || label.length() > 80)
+            throw new BusinessException("O nome da tag precisa ter entre 1 e 80 caracteres.");
+        if (label.equalsIgnoreCase("OCG Champion 2025")) {
+            grant(new Grant(request.userId()));
+            return;
+        }
+        if (label.matches("(?i)OCG (Champion|Runner-up|Third Place) [0-9]{4}"))
+            throw new BusinessException("Usa outro nome. As tags de pódio são reservadas.");
+        var recipient = find(request.userId());
+        if (assigned.existsByRecipientIdAndLabelIgnoreCase(recipient.getId(), label)) return;
+        var award = new AssignedAward();
+        award.setRecipientId(recipient.getId());
+        award.setLabel(label);
+        assigned.save(award);
+    }
+
     private UserModel find(UUID id) {
         return users.findById(id).filter(user -> user.getDeletedAt() == null)
             .orElseThrow(() -> new ResourceNotFoundException("Participante não encontrado."));
@@ -91,6 +116,10 @@ public class AwardController {
         for (var user : users.findAll()) {
             if (user.getDeletedAt() == null && Integer.valueOf(2025).equals(user.getManualChampionYear()))
                 add(earned, user.getId(), 2025, 1);
+        }
+        for (var award : assigned.findAll()) {
+            earned.computeIfAbsent(award.getRecipientId(), ignored -> new ArrayList<>())
+                .add(new Tag(award.getId().toString(), award.getLabel(), 0));
         }
         return earned;
     }

@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+        <h2.scope>test</h2.scope>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -41,7 +42,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
+            <scope>${h2.scope}</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -128,6 +129,10 @@
 	</build>
 
     <profiles>
+        <profile>
+            <id>local-h2</id>
+            <properties><h2.scope>runtime</h2.scope></properties>
+        </profile>
         <profile>
             <id>postgres-it</id>
             <build>

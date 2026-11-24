@@ -4,7 +4,30 @@ Bolão do Oscar entre amigos, como API. Cada um palpita nos indicados de cada ca
 
 **Stack:** Java 21 · Spring Boot 3 · PostgreSQL · Docker
 
-## Rodando em 2 comandos
+## Rodar no Windows com PowerShell
+
+Com o JDK 21 ou superior instalado, abra um PowerShell na pasta `oscar-voting-system`. O modo local usa o Maven Wrapper do projeto e um banco H2 em arquivo. Na primeira execução, o Maven precisa de internet para baixar as dependências.
+
+```powershell
+.\iniciar-local.cmd
+```
+
+Deixe esse terminal aberto. Quando aparecer `Started OscarVotingSystemApplication`, abra [a lista de indicações](http://127.0.0.1:8080/nominations). Um banco novo retorna `[]`. Os dados persistem em `%LOCALAPPDATA%\OscarComOsGurizes` após reiniciar. Esse banco começa separado da demonstração e do PostgreSQL.
+
+Em outro PowerShell, na pasta do backend, consulte a senha do usuário **admin-local**. Em seguida inicie o frontend (Node.js 22 ou superior) e abra [o site local](http://127.0.0.1:5176).
+
+```powershell
+.\iniciar-local.cmd -MostrarSenhaAdmin
+cd ..\ocg
+$env:OSCAR_API_URL = 'http://127.0.0.1:8080'
+$env:HOST = '127.0.0.1'
+$env:PORT = '5176'
+node server.mjs
+```
+
+Para ativar **Buscar dados**, execute `.\iniciar-local.cmd -ConfigurarTMDB` na pasta do backend. Cole o [API Read Access Token do TMDB](https://www.themoviedb.org/settings/api) no prompt oculto. A senha administrativa e o token salvo ficam protegidos pela conta Windows. Se a API estiver rodando, pare com **Ctrl+C** no terminal dela e execute `.\iniciar-local.cmd` novamente. Entre de novo após reiniciar a API. Para parar o site, use **Ctrl+C** no terminal do frontend.
+
+## Rodar com PostgreSQL e Docker
 
 ```bash
 docker compose up -d     # sobe o PostgreSQL

@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<CategoryModel, UUID> {
+    @org.springframework.data.jpa.repository.Query("select count(c) from CategoryModel c where lower(trim(c.name)) = lower(:name)")
+    long countByNormalizedName(String name);
 }

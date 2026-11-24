@@ -4,4 +4,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
 import java.util.UUID;
 public record NominationDTO(@NotNull UUID categoryId, @NotNull UUID movieId,
-                            @NotNull UUID personId, int year, @NotNull @Min(0) @Max(1) Integer status) {}
+                            @NotNull UUID personId, int year, @NotNull @Min(0) @Max(1) Integer status,
+                            @jakarta.validation.constraints.Pattern(regexp = "MOVIE|PERSON") String artworkSource) {
+    public NominationDTO(UUID categoryId, UUID movieId, UUID personId, int year, Integer status) {
+        this(categoryId, movieId, personId, year, status, null);
+    }
+}

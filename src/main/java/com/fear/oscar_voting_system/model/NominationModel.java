@@ -46,4 +46,5 @@ public class NominationModel implements Serializable {
     private Integer status;
 
     private Boolean isWinner;
+    private String artworkSource;
 }

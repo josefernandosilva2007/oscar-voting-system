@@ -12,8 +12,11 @@ import java.util.*;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final NominationRepository nominationRepository;
-    public CategoryModel saveCategory(CategoryDTO dto) {
-        return categoryRepository.save(CategoryModel.builder().name(dto.name()).build());
+    public synchronized CategoryModel saveCategory(CategoryDTO dto) {
+        String name = dto.name().strip();
+        if (categoryRepository.countByNormalizedName(name) > 0)
+            throw new BusinessException("Já existe uma categoria com esse nome.");
+        return categoryRepository.save(CategoryModel.builder().name(name).build());
     }
     @Transactional
     public void defineWinningNomination(UUID categoryId, UUID nominationId) {

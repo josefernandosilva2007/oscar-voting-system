@@ -44,6 +44,6 @@ public class NominationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Filme não encontrado")))
             .person(personRepository.findById(dto.personId())
                 .orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada")))
-            .year(dto.year()).status(dto.status()).build());
+            .year(dto.year()).status(dto.status()).artworkSource(dto.artworkSource()).build());
     }
 }

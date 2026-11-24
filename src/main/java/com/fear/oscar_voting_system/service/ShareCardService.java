@@ -23,11 +23,13 @@ public class ShareCardService {
         int rank = 0;
         int points = 0;
         var scores = ranking.rankingScore(year);
+        int position = 1;
         for (int index = 0; index < scores.size(); index++) {
             ResponseUserScoreDTO score = scores.get(index);
+            if (index > 0 && score.score() != scores.get(index - 1).score()) position = index + 1;
             if (score.id().equals(userId)) {
                 points = score.score();
-                rank = index + 1;
+                rank = position;
                 break;
             }
         }

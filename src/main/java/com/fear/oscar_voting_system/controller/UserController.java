@@ -28,6 +28,16 @@ public class UserController {
     UserService userService;
     @Autowired
     ShareCardService shareCardService;
+    @Autowired
+    com.fear.oscar_voting_system.service.VoteService voteService;
+
+    public record ParticipantProfile(ShareCardDTO profile,
+            List<com.fear.oscar_voting_system.dto.ResponseUserVoteDTO> votes) {}
+
+    @GetMapping("/{id}/profile/{year}")
+    public ParticipantProfile participantProfile(@PathVariable UUID id, @PathVariable int year) {
+        return new ParticipantProfile(shareCardService.getCard(id, year), voteService.revealedVotes(id, year));
+    }
 
     @PostMapping
     public ResponseEntity<UserModel> saveUser(@RequestBody @Valid UserDTO userDTO){

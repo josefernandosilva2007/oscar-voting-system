@@ -80,13 +80,21 @@ public class VoteService {
     }
 
     @Transactional(readOnly = true)
+    public List<ResponseUserVoteDTO> revealedVotes(UUID userId, int year) {
+        if (LocalDateTime.now().isBefore(votingDeadline)) return null;
+        return voteRepository.findByUser_IdAndYear(userId, year).stream().map(this::voteDetails).toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<ResponseUserVoteDTO> listVotesByUser(UUID userId) {
-        return voteRepository.findByUser_Id(userId).stream().map(v -> {
+        return voteRepository.findByUser_Id(userId).stream().map(this::voteDetails).toList();
+    }
+
+    private ResponseUserVoteDTO voteDetails(VoteModel v) {
             NominationModel n = v.getNomination();
             return new ResponseUserVoteDTO(v.getId(), v.getCategory().getId(),
                 v.getCategory().getName(), n.getId(), n.getMovie().getName(),
                 n.getPerson().getName(), n.getYear(), n.getIsWinner());
-        }).toList();
     }
 
     @Transactional(readOnly = true)

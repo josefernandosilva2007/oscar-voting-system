@@ -69,6 +69,9 @@ public class VoteService {
     private NominationModel openNomination(UUID id) {
         NominationModel nomination = nominationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Indicação não encontrada"));
+        if (nominationRepository.existsByCategory_IdAndYearAndIsWinnerTrue(
+                nomination.getCategory().getId(), nomination.getYear()))
+            throw new BusinessException("A votação desta categoria encerrou porque o vencedor já foi publicado.");
         if (Integer.valueOf(0).equals(nomination.getStatus()))
             throw new BusinessException("Esta indicação está fechada para palpites");
         return nomination;

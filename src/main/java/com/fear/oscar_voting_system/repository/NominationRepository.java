@@ -8,6 +8,7 @@ public interface NominationRepository extends JpaRepository<NominationModel, UUI
     @Query("select n.year from NominationModel n where n.year > 2025 group by n.year having count(distinct n.category.id) = count(distinct case when n.isWinner is not null then n.category.id else null end) order by n.year desc")
     List<Integer> completedAwardYears();
     List<NominationModel> findByCategory_IdAndYear(UUID categoryId, int year);
+    boolean existsByCategory_IdAndYearAndIsWinnerTrue(UUID categoryId, int year);
     @Query("select count(distinct n.category.id) from NominationModel n where n.year = :year")
     long countDistinctByYear(int year);
     @Query("select count(distinct n.category.id) from NominationModel n where n.year = :year and n.isWinner is not null")

@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/users", "/users/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/categories", "/movies", "/people", "/nominations", "/nominations/ceremony/**", "/ranking/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/categories", "/movies", "/people", "/nominations", "/catalog/preview").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PATCH, "/categories/*/winner").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/categories/*", "/categories/*/winner").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/votes").hasRole("ADMIN")
                 .anyRequest().authenticated())
             .addFilterBefore(new BearerTokenFilter(tokens), UsernamePasswordAuthenticationFilter.class)

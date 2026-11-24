@@ -80,8 +80,7 @@ public class VoteService {
     }
 
     @Transactional(readOnly = true)
-    public List<ResponseUserVoteDTO> revealedVotes(UUID userId, int year) {
-        if (LocalDateTime.now().isBefore(votingDeadline)) return null;
+    public List<ResponseUserVoteDTO> listVotesByUserAndYear(UUID userId, int year) {
         return voteRepository.findByUser_IdAndYear(userId, year).stream().map(this::voteDetails).toList();
     }
 

@@ -18,6 +18,16 @@ public class CategoryService {
             throw new BusinessException("Já existe uma categoria com esse nome.");
         return categoryRepository.save(CategoryModel.builder().name(name).build());
     }
+    public synchronized CategoryModel renameCategory(UUID id, CategoryDTO dto) {
+        var category = categoryRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
+        String name = dto.name().strip();
+        if (!category.getName().strip().equalsIgnoreCase(name)
+                && categoryRepository.countByNormalizedName(name) > 0)
+            throw new BusinessException("Já existe uma categoria com esse nome.");
+        category.setName(name);
+        return categoryRepository.save(category);
+    }
     @Transactional
     public void defineWinningNomination(UUID categoryId, UUID nominationId) {
         categoryRepository.findById(categoryId)

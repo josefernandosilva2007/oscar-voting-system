@@ -30,6 +30,11 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.listAllCategories());
     }
 
+    @PatchMapping("/{id}")
+    public CategoryModel renameCategory(@PathVariable UUID id, @RequestBody @Valid CategoryDTO body) {
+        return categoryService.renameCategory(id, body);
+    }
+
     @PatchMapping("/{id}/winner")
     public ResponseEntity<Void> setWinner(@PathVariable UUID id, @RequestBody @Valid com.fear.oscar_voting_system.dto.WinnerDTO body) {
         categoryService.defineWinningNomination(id, body.nominationId());

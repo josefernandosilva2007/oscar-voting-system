@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping("/{id}/profile/{year}")
     public ParticipantProfile participantProfile(@PathVariable UUID id, @PathVariable int year) {
-        return new ParticipantProfile(shareCardService.getCard(id, year), voteService.revealedVotes(id, year));
+        return new ParticipantProfile(shareCardService.getCard(id, year), voteService.listVotesByUserAndYear(id, year));
     }
 
     @PostMapping

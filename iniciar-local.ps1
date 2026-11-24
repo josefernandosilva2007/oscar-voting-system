@@ -23,8 +23,14 @@ if ($MostrarSenhaAdmin) {
     return
 }
 if ($ConfigurarTMDB) {
-    $token = Read-Host 'Cole o API Read Access Token do TMDB' -AsSecureString
-    if (!$token.Length) { throw 'Token vazio.' }
+    $token = Read-Host 'Cole o API Read Access Token do TMDB e pressione Enter (Ctrl+V usa a area de transferencia)' -AsSecureString
+    $text = [PSCredential]::new('TMDB', $token).GetNetworkCredential().Password
+    # Some Windows consoles deliver the Ctrl+V keystroke itself to a masked prompt.
+    if ($text -eq [string][char]22) { $text = Get-Clipboard -Raw }
+    if (!$text -or $text.Trim() -cnotmatch '\A[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\z') {
+        throw 'Token invalido. Copie o API Read Access Token completo em themoviedb.org/settings/api e tente novamente.'
+    }
+    $token = ConvertTo-SecureString $text.Trim() -AsPlainText -Force
     [PSCredential]::new('TMDB', $token) | Export-Clixml -LiteralPath $tokenFile
     Write-Host 'Token salvo. Reinicie o backend para aplicar.'
     return

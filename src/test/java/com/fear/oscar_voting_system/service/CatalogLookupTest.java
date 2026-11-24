@@ -15,11 +15,20 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 class CatalogLookupTest {
     private final RestClient.Builder builder = RestClient.builder().baseUrl("https://api.themoviedb.org/3");
     private final MockRestServiceServer server = MockRestServiceServer.bindTo(builder).build();
-    private final CatalogLookup lookup = new CatalogLookup("test", builder.build());
+    private final CatalogLookup lookup = new CatalogLookup("test.payload.signature", builder.build());
+
+    @Test void reportsInvalidConfigurationWhenPasteSavedOnlyCtrlV() {
+        var invalid = new CatalogLookup(String.valueOf((char) 22), builder.build());
+        var error = assertThrows(ResponseStatusException.class,
+                () -> invalid.lookup("https://www.themoviedb.org/person/13520", "person"));
+        assertEquals(503, error.getStatusCode().value());
+        assertTrue(error.getReason().contains("incompleto"));
+        server.verify();
+    }
 
     @Test void readsMovieFromImdbFindResults() {
         server.expect(requestTo("https://api.themoviedb.org/3/find/tt1234567?external_source=imdb_id&language=pt-BR"))
-                .andExpect(header("Authorization", "Bearer test"))
+                .andExpect(header("Authorization", "Bearer test.payload.signature"))
                 .andRespond(withSuccess("""
                         {"movie_results":[{"title":"Filme","overview":"Sinopse","poster_path":"/poster.jpg"}]}
                         """, MediaType.APPLICATION_JSON));

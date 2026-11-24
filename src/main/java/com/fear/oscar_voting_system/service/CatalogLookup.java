@@ -66,6 +66,9 @@ public class CatalogLookup {
                     ? "Use este link em Novo filme." : "Use este link em Nova pessoa.");
         if (token.isEmpty()) throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
                 "Configure TMDB_READ_ACCESS_TOKEN no backend para importar dados.");
+        if (!token.matches("[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+"))
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
+                    "O token do TMDB está incompleto. Configure o API Read Access Token e reinicie o backend.");
 
         String id = match.group(2);
         String path = imdb ? "/find/" + (movie ? "tt" : "nm") + id + "?external_source=imdb_id&language=pt-BR"

@@ -4,6 +4,7 @@ import com.fear.oscar_voting_system.model.VoteModel;
 import org.springframework.data.jpa.repository.*;
 import java.util.*;
 public interface VoteRepository extends JpaRepository<VoteModel, UUID> {
+    boolean existsByNomination_Id(UUID nominationId);
     boolean existsByUser_IdAndCategory_IdAndNomination_Year(UUID userId, UUID categoryId, int year);
     List<VoteModel> findByUser_Id(UUID userId);
     List<VoteModel> findByUser_IdAndYear(UUID userId, int year);

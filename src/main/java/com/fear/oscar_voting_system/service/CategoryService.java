@@ -40,4 +40,5 @@ public class CategoryService {
             .forEach(n -> n.setIsWinner(n.getId().equals(nominationId)));
     }
     public List<CategoryModel> listAllCategories() { return categoryRepository.findAll(); }
+    public void deleteCategory(UUID id) { categoryRepository.deleteById(id); }
 }

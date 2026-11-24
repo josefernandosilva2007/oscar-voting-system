@@ -34,6 +34,11 @@ public class CategoryController {
     public CategoryModel renameCategory(@PathVariable UUID id, @RequestBody @Valid CategoryDTO body) {
         return categoryService.renameCategory(id, body);
     }
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCategory(@PathVariable UUID id) {
+        categoryService.deleteCategory(id);
+    }
 
     @PatchMapping("/{id}/winner")
     public ResponseEntity<Void> setWinner(@PathVariable UUID id, @RequestBody @Valid com.fear.oscar_voting_system.dto.WinnerDTO body) {

@@ -13,6 +13,12 @@ docker compose up -d     # sobe o PostgreSQL
 
 Pré-requisitos: Java 21 e Docker.
 
+### Importação de filmes e pessoas
+
+Para habilitar **Buscar dados** no painel Admin, configure a variável de ambiente `TMDB_READ_ACCESS_TOKEN` no processo do backend e reinicie a API. Use o **API Read Access Token** da [conta TMDB](https://www.themoviedb.org/settings/api).
+
+`POST /catalog/preview` requer acesso administrativo e recebe `url` e `type` (`movie` ou `person`). Aceita páginas de filmes e pessoas do IMDb e do TMDB. A consulta usa o catálogo do TMDB em português do Brasil e retorna os campos para revisão antes do cadastro.
+
 ## A ideia
 
 - Existem **categorias** (Melhor Filme, Melhor Ator...) e **indicações** — um filme ou pessoa concorrendo em uma categoria num ano.
